@@ -17,6 +17,9 @@ var addMarker = function(location){
     icon: carImage
   });
 };
+var addAllMarkers = function(markers){
+  markers.forEach(addMarker);
+}
 
 //make map with markers
 function initMap() {
@@ -25,10 +28,8 @@ function initMap() {
     center: {lat: +40.6706031, lng: -73.9901245},
     zoom: 15
   });
-  //to be used
-  var addAllMarkers = function(markers){
-    markers.forEach(addMarker);
-  }
+
+
   // makes markers for each item that's seeded
   $.ajax({
     url: '/spots',
@@ -43,7 +44,6 @@ function MapsController($http) {
   var maps = this;
   maps.add = function(){
     var newSpot = {lat: maps.address, lng: maps.city};
-    console.log(newSpot);
     $http.post('/spots', newSpot).then(initMap);
   };
 };

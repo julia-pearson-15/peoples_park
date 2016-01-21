@@ -33,7 +33,6 @@ app.get('/spots', function(req, res){
 app.post('/spots', function(req, res){
   var newSpot = {location: req.body};
   db.collection('spots').insert(newSpot, function(err, result){
-    console.log(newSpot);
     res.json(newSpot);
   });
 });
