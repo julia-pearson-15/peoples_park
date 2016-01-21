@@ -6,6 +6,8 @@ var carImage = '/images/car-marker.png';
 // reusable marker maker
 var addMarker = function(location){
   // makes marker
+  location.location.lat = parseFloat(location.location.lat);
+  location.location.lng = parseFloat(location.location.lng);
   var marker = new google.maps.Marker({
     // set the positon to the latitude and longitude
     position: location.location,
