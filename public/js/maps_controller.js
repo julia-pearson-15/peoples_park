@@ -1,5 +1,11 @@
 angular.module('ParkApp').controller('MapsController', MapsController);
 
+// What should be in controllers?
+// Is it OK to split into two pages?
+// Should I be using angular or ajax?
+// How to I get my additions to load into the database?
+// Need to take down this marker.
+
 var map;
 var carImage = '/images/car-marker.png';
 
@@ -8,6 +14,11 @@ var addMarker = function(location){
   // makes marker
   location.location.lat = parseFloat(location.location.lat);
   location.location.lng = parseFloat(location.location.lng);
+  // if(location.current){
+  //   carImage = '/images/car-marker-current.png';
+  // }else{
+  //   carImage = '/images/car-marker.png';
+  // };
   var marker = new google.maps.Marker({
     // set the positon to the latitude and longitude
     position: location.location,
@@ -17,9 +28,6 @@ var addMarker = function(location){
     icon: carImage
   });
 };
-var addAllMarkers = function(markers){
-  markers.forEach(addMarker);
-}
 
 //make map with markers
 function initMap() {
@@ -29,49 +37,44 @@ function initMap() {
     zoom: 15
   });
 
-  // map.addListener('click', function(event) {
-  //   console.log(event.latLng);
-  //   addMarker({location:{event.latLng});
-  // });
-
-  // makes markers for each item that's seeded
+  // !!!! reactivate when I make a separate add spot page
+  // puts all locations on the map
+  var addAllMarkers = function(markers){
+    markers.forEach(addMarker);
+  } 
+  // // Gets all seeded locations
   $.ajax({
     url: '/spots',
     type: 'GET',
     dataType: 'json'
   }).done(addAllMarkers);
+
+  //to add spot onto the map
+  map.addListener('click', function(event) {
+    // {location: {lat: event.latLng.lat(), lng: event.latLng.lng()}}
+    var latitude = event.latLng.lat();
+    var longitude = event.latLng.lng();
+    var pickedLocation = {location: {lat: latitude, lng: longitude}}
+    console.log(pickedLocation);
+    $.ajax({
+      url: '/spots',
+      type: 'POST',
+      dataType: 'json',
+      // AM NOT GETTING THIS
+      data: {spot: pickedLocation}
+    }).done(function(response){console.log(response)});
+    addMarker(pickedLocation);
+  });
 };
 
-MapsController.$inject = ['$http'];
+// MapsController.$inject = ['$http'];
 
-function MapsController($http) {
-  var maps = this;
+// function MapsController($http) {
+//   var maps = this;
+//   maps.add = function(){
+//     var newSpot = {lat: maps.address, lng: maps.city};
+//     $http.post('/spots', newSpot).then(initMap);
+//   };
+// };
 
-  maps.locations = maps.getLocations;
-
-  maps.getLocations = function(){
-    
-  };
-
-  maps.add = function(){
-    var newSpot = {lat: maps.address, lng: maps.city};
-    $http.post('/spots', newSpot).then(initMap);
-  };
-};
-
-//will call ajax to add spot
-// var updateSpots = function(event){
-//   event.preventDefault();
-//   $.ajax({
-//     url: '/spots',
-//     type: 'POST',
-//     dataType: 'json',
-//     data: {lat: 40.6701091, lng: -73.9900451}
-//   }).done(function(){console.log('got here')});
-// }
-
-// $(document).ready(function(){
-//   var addSpot = $('#new-spot');
-//   addSpot.on('click', updateSpots);
-// });
 

@@ -31,9 +31,17 @@ app.get('/spots', function(req, res){
 });
 
 app.post('/spots', function(req, res){
-  var newSpot = {location: req.body};
-  db.collection('spots').insert(newSpot, function(err, result){
-    res.json(newSpot);
+  var newSpot = req.body.spot;
+  console.log(req.body)
+  res.json(newSpot)
+  // db.collection('spots').insert(newSpot, function(err, result){
+  //   res.json(newSpot);
+  // });
+});
+
+app.get('/data', function(req, res){
+  db.collection('spots').find({}).toArray(function(err, results){
+    res.send(results);
   });
 });
 

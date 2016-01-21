@@ -5,8 +5,8 @@ body {
   height: 60%;
   width: 50%;
   position: absolute;
+  top: 40px;
   right: 100px;
-  top: 100px;
 }
 #container {
   width: 80%;
