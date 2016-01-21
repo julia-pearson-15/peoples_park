@@ -1,0 +1,34 @@
+body {
+  height: 100%;
+}
+#map {
+  height: 60%;
+  width: 50%;
+  position: absolute;
+  right: 100px;
+  top: 100px;
+}
+#container {
+  width: 80%;
+  margin: 0 auto;
+}
+#user-input {
+  width: 30%;
+  height: 60%;
+  position: absolute;
+  top: 100px;
+}
+#add-form {
+  padding: 10px;
+  width: 100%;
+}
+.input{
+  padding: 7px;
+  position: relative;
+  left: 0px;
+  font-size: 15px;
+  background-color: white;
+  border-color: lightgrey;
+  box-shadow: none;
+  border-radius: 5px;
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="ParkApp">
+<head>
+  <title>People's Park</title>
+  <script src="/angular/angular.js" ></script>
+  <script src="/jquery/dist/jquery.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/maps_controller.js" ></script>
+  <link rel="stylesheet" type="text/css" href="/style/style.css">
+  <meta name="viewport" content="initial-scale=1.0">
+  <meta charset="utf-8">
+</head>
+<body>
+  <div id="container" ng-controller="MapsController as maps">
+    <div id="user-input">
+      <form id="add-form">
+        <input ng-model="maps.address" class="input" name="address" placeholder="Street Address">
+        <p></p>
+        <input ng-model="maps.city" class="input" name="city" placeholder="City">
+        <p></p>
+        <input ng-model="maps.state" class="input" name="state" placeholder="State">
+        <p></p>
+        <button ng-click="maps.add()" class="input" id="new-spot">Add Spot</button>
+      </form> <!-- add-form -->
+    </div> <!-- user-input -->
+    <div id="map"></div> <!-- map -->
+  </div> <!-- container -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%=myKey%>&callback=initMap"
+  async defer></script>
+</body>
+</html>
