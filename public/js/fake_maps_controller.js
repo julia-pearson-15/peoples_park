@@ -46,13 +46,6 @@ MapsController.$inject = ['$http'];
 
 function MapsController($http) {
   var maps = this;
-
-  maps.locations = maps.getLocations;
-
-  maps.getLocations = function(){
-    
-  };
-
   maps.add = function(){
     var newSpot = {lat: maps.address, lng: maps.city};
     $http.post('/spots', newSpot).then(initMap);
