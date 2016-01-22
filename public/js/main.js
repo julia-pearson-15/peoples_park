@@ -57,12 +57,10 @@ var addMarker = function(location){
     icon: carImage
   });
   marker.addListener('click', function(event) {
-    console.log(event);
     infowindow.open(map, marker);
     $('#take-spot').on('click', function(event){
       //stop link in info box from workign
       event.preventDefault();
-      console.log(location.status);
       $.ajax({
         url: '/taken',
         type: 'POST',
@@ -105,14 +103,17 @@ $(document).ready(function(){
     // canDrag = true;
     //to add spot onto the map
     map.addListener('click', function(event) {
+      var formModal = $(".form-modal-container");
+      formModal.toggle();
       var latitude = event.latLng.lat();
       var longitude = event.latLng.lng();
-      var pickedLocation = {location: {lat: latitude, lng: longitude}}
+      var thisTime = new Date();
+      console.log(thisTime);
+      var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: "Tuesday", status: "current"};
       $.ajax({
         url: '/spots',
         type: 'POST',
         dataType: 'json',
-
         data: {spot: pickedLocation}
       }).done(addMarker(pickedLocation));
     });
