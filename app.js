@@ -40,11 +40,12 @@ app.post('/spots', function(req, res){
   });
 });
 
-app.post('/spots/delete', function(req, res){
+app.post('/taken', function(req, res){
   var takenSpot = req.body.spot;
   console.log(takenSpot);
-  res.json('hi');
-
+  db.collection('spots').update({_id: req.body.spot._id},{$set: {status : 'taken'}}, function(err, data) {
+    res.json(data);
+  });
 });
 
 app.get('/data', function(req, res){

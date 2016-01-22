@@ -15,21 +15,30 @@ var addMarker = function(location){
   // makes marker
   location.location.lat = parseFloat(location.location.lat);
   location.location.lng = parseFloat(location.location.lng);
+
+  // logic that sets car marker
   if(location.status == 'current'){
     carImage = '/images/car-available.png';
   }else if(location.status == 'soon'){
     carImage = '/images/car-soon.png';
-  }else if(location.status == 'expired'){
+  }else if(location.status == 'expiring'){
     carImage = '/images/car-expired.png';
-  }else if(location.status == 'chosen'){
+  }else if(location.status == 'taken'){
     carImage = '/images/my-car.png';
   };
 
   var contentStringStart = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">'+ location.day +'</h1>'+'<div id="bodyContent">'; 
   var middle;
-  // if(location.status == 'soon'){
+
+  // logic that sets info timing
+  if(location.status == 'soon'){
     middle = '<p>Leaving Spot at ' + location.leaving;
-  // };
+  }else if(location.status == 'current' || location.status == 'expiring'){
+    middle = '<p>Left Spot at ' + location.leaving;
+  }else if(location.status == 'taken'){
+    middle = '<p>Get to Spot by ' + location.leaving;
+  };
+
   var contentStringEnd = '</p>'+'<a id="take-spot" href="/false">'+'Take Spot</a>'+'</div>'+'</div>';
   var contentString = contentStringStart+middle+contentStringEnd;
   //make action for taking spot away
@@ -47,15 +56,15 @@ var addMarker = function(location){
     // makes icon my car image
     icon: carImage
   });
-
-  marker.addListener('click', function() {
+  marker.addListener('click', function(event) {
+    console.log(event);
     infowindow.open(map, marker);
     $('#take-spot').on('click', function(event){
       //stop link in info box from workign
       event.preventDefault();
-      console.log(location.current);
+      console.log(location.status);
       $.ajax({
-        url: '/spots/delete',
+        url: '/taken',
         type: 'POST',
         dataType: 'json',
         data: {spot: location}
