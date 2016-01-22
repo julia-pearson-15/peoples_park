@@ -5,7 +5,7 @@
 // Need to take down this marker.
 
 var map;
-var carImage;
+var carImage = "/images/car-available.png";
 var userAdding = false;
 
 // var canDrag = false;
