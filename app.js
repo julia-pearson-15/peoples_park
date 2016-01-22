@@ -1,11 +1,14 @@
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+var app = express();
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/bower_components'));
-app.set('view engine', 'ejs')
+
+app.set('view engine', 'ejs');
+
+app.use(bodyParser());
 
 var db;
 var MongoClient = require('mongodb').MongoClient;
@@ -32,11 +35,16 @@ app.get('/spots', function(req, res){
 
 app.post('/spots', function(req, res){
   var newSpot = req.body.spot;
-  console.log(req.body)
-  res.json(newSpot)
-  // db.collection('spots').insert(newSpot, function(err, result){
-  //   res.json(newSpot);
-  // });
+  db.collection('spots').insert(newSpot, function(err, result){
+    res.json(newSpot);
+  });
+});
+
+app.post('/spots/delete', function(req, res){
+  var takenSpot = req.body.spot;
+  console.log(takenSpot);
+  res.json('hi');
+
 });
 
 app.get('/data', function(req, res){
