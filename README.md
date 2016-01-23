@@ -31,10 +31,10 @@ This web App enables users to see a live map of open parking spots in their neig
   //This can be current (user entered this, "leaving" is set to current time), soon (user chose, they are leaving at time "leaving"), or chosen (user took spot, they can see as outlined and larger)
   "status": "soon",
   
-  //this is the username of the user who marked the spot
+  //this is the username of the user who marked the spot, set when user adds spot
   "leaver": "username",
   
-  /this is the username of the user who has selected the spot
+  /this is the username of the user who has selected the spot, set when user takes spot
   "taker": "username"
   }
 ]
