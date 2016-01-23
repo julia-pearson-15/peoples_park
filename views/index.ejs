@@ -16,9 +16,23 @@
       <button id="see-spots" class="menu-buttons modal-content">See Spots</button>
     </div>
     <div id="menu" class="form-modal-container">
-      <input id="add-spot" class="menu-buttons input-modal-content">
-      <p></p>
-      <input id="see-spots" class="menu-buttons input-modal-content">
+      <form action="/#" method="POST">
+        <select id="day-input" class="input-modal-content" name="day">
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+        </select><br>
+        <select id="status-input" class="input-modal-content" name="status">
+          <option value="now">Now</option>
+          <option value="5">5 mins</option>
+          <option value="10">10 mins</option>
+          <option value="15">15 mins</option>
+          <option value="20">20 mins</option>
+        </select><br>
+        <button type="submit" id="new-spot-button" class="input-modal-content">Add Spot</button>
+      </form>
     </div>
     <div id="map" ></div> <!-- map -->
   </div> <!-- container -->

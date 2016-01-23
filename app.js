@@ -42,7 +42,8 @@ app.post('/spots', function(req, res){
 
 app.post('/taken', function(req, res){
   var takenSpot = req.body.spot;
-  db.collection('spots').update({_id: takenSpot._id},{$set: {day : 'taken'}}, function(err, data) {
+  var spotId = ObjectId(takenSpot._id)
+  db.collection('spots').update({"_id": spotId},{$set: {status : 'taken'}}, function(err, data) {
     res.json(data);
   });
 });

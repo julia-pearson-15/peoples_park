@@ -39,17 +39,14 @@
   z-index: 2;
   position: relative;
   top: 100px;
-  background-color: white;
-  height: 10%;
+  height: 8%;
   width: 40%;
   margin: 0 30%;
-  border-radius: 15px;
-  font-size: 30px;
-  background: rgb(234, 93, 13);
-  color: white;
-  font-weight: bold;
-  border-color: none;
-  border-style: none;  
+  font-size: 25px;
+  background: white;
+  color: rgba(13, 130, 234, 0.67);
+  border: solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px; 
 }
 #container {
   width: 100%;

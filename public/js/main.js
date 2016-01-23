@@ -12,17 +12,15 @@ var userAdding = false;
 
 // reusable marker maker
 var addMarker = function(location){
-  // makes marker
   location.location.lat = parseFloat(location.location.lat);
   location.location.lng = parseFloat(location.location.lng);
+  console.log(location.location, location.location);
 
   // logic that sets car marker
   if(location.status == 'current'){
     carImage = '/images/car-available.png';
   }else if(location.status == 'soon'){
     carImage = '/images/car-soon.png';
-  }else if(location.status == 'expiring'){
-    carImage = '/images/car-expired.png';
   }else if(location.status == 'taken'){
     carImage = '/images/my-car.png';
   };
@@ -76,7 +74,6 @@ var addAllMarkers = function(markers){
 } 
 //make map with markers
 function initMap() {
-  console.log('printing1');
   // makes map
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: +40.6706031, lng: -73.9901245},
@@ -85,11 +82,10 @@ function initMap() {
 };
 
 $(document).ready(function(){
-  var modal = $(".modal-container");
-  modal.toggle();
-  console.log('printing1');
+  var $modal = $(".modal-container");
+  $modal.toggle();
   $('#see-spots').on('click',function(event){
-    modal.toggle();
+    $modal.toggle();
     // Gets all seeded locations
     $.ajax({
       url: '/spots',
@@ -99,23 +95,44 @@ $(document).ready(function(){
   })
   $('#add-spot').on('click',function(event){
     userAdding = true;
-    modal.toggle();
+    $modal.toggle();
     // canDrag = true;
     //to add spot onto the map
     map.addListener('click', function(event) {
-      var formModal = $(".form-modal-container");
-      formModal.toggle();
+      //get latitude and longitude from click
       var latitude = event.latLng.lat();
-      var longitude = event.latLng.lng();
+      var longitude = event.latLng.lng();  
+
       var thisTime = new Date();
-      console.log(thisTime);
-      var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: "Tuesday", status: "current"};
-      $.ajax({
-        url: '/spots',
-        type: 'POST',
-        dataType: 'json',
-        data: {spot: pickedLocation}
-      }).done(addMarker(pickedLocation));
+
+      //grab the form modal and show it
+      var $formModal = $('.form-modal-container');
+      $formModal.toggle();
+
+      $('#new-spot-button').on('click',function(event){
+        event.preventDefault();
+        var thisDay = $('#day-input').val();
+        // will either be now or 5-20 minutes
+        var thisStatus = $('#status-input').val(); 
+        // console.log(thisStatus);
+        var thisTime = new Date();
+        if(thisStatus == 'now'){
+          thisStatus = "current";
+        } else {
+          var minuteDelay = thisTime.getMinutes()+parseInt(thisStatus);
+          thisTime.setMinutes(minuteDelay); 
+          thisStatus = "soon";
+        }
+        //prevent submit button
+        var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: thisDay, status: thisStatus};
+        $formModal.toggle();
+        $.ajax({
+          url: '/spots',
+          type: 'POST',
+          dataType: 'json',
+          data: {spot: pickedLocation}
+        }).done(addMarker(pickedLocation));
+      });
     });
   })
 });
