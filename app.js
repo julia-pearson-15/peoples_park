@@ -43,6 +43,18 @@ app.post('/spots', function(req, res){
 app.post('/taken', function(req, res){
   var takenSpot = req.body.spot;
   var spotId = ObjectId(takenSpot._id)
+  // var updateNewSpot = function(error, oldSpot){
+  //   db.collection('spots').update({"_id": spotId},{$set: {status : 'taken'}}, function(err, data) {
+  //     res.json(data);
+  //   });   
+  // };
+  // var updateOldSpot = function(error, oldSpot){
+    
+  //   if (oldSpot.leaving.getMinutes() > now.getMinutes()) {};
+  //   db.collection('spots').update({"status": "taken"},{$set: {status : "taken"}}, function(err, data) {
+  //     res.json(data);
+  //   });
+  // };
   db.collection('spots').update({"_id": spotId},{$set: {status : 'taken'}}, function(err, data) {
     res.json(data);
   });

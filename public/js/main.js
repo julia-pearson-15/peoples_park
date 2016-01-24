@@ -10,11 +10,9 @@ var userAdding = false;
 
 // var canDrag = false;
 
-// reusable marker maker
 var addMarker = function(location){
   location.location.lat = parseFloat(location.location.lat);
   location.location.lng = parseFloat(location.location.lng);
-  console.log(location.location, location.location);
 
   // logic that sets car marker
   if(location.status == 'current'){
@@ -28,13 +26,20 @@ var addMarker = function(location){
   var contentStringStart = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">'+ location.day +'</h1>'+'<div id="bodyContent">'; 
   var middle;
 
+  var fullDate = new Date(location.leaving);
+  if(fullDate.getHours() > 12){
+    var time = (fullDate.getHours()-12) + ":" + fullDate.getMinutes()+" PM";
+  }else{
+    var time = fullDate.getHours() + ":" + fullDate.getMinutes()+" AM";
+  }
   // logic that sets info timing
   if(location.status == 'soon'){
-    middle = '<p>Leaving Spot at ' + location.leaving;
-  }else if(location.status == 'current' || location.status == 'expiring'){
-    middle = '<p>Left Spot at ' + location.leaving;
+    middle = '<p>Leaving Spot at ' + time;
+  }else if(location.status == 'current'){
+    middle = '<p>Left Spot at ' + time;
+
   }else if(location.status == 'taken'){
-    middle = '<p>Get to Spot by ' + location.leaving;
+    middle = '<p>Get to Spot by ' + time;
   };
 
   var contentStringEnd = '</p>'+'<a id="take-spot" href="/false">'+'Take Spot</a>'+'</div>'+'</div>';
@@ -43,7 +48,6 @@ var addMarker = function(location){
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
-  // console.log(location._id);
   var marker = new google.maps.Marker({
     // set the positon to the latitude and longitude
     position: location.location,
@@ -64,7 +68,7 @@ var addMarker = function(location){
         type: 'POST',
         dataType: 'json',
         data: {spot: location}
-      }).done(function(response){console.log(response);});
+      }).done(function(response){});
     });
   });
 };
@@ -108,13 +112,15 @@ $(document).ready(function(){
       //grab the form modal and show it
       var $formModal = $('.form-modal-container');
       $formModal.toggle();
-
+      $('#error-button').on('click',function(event){
+        event.preventDefault();
+        $formModal.toggle();
+      });
       $('#new-spot-button').on('click',function(event){
         event.preventDefault();
         var thisDay = $('#day-input').val();
         // will either be now or 5-20 minutes
         var thisStatus = $('#status-input').val(); 
-        // console.log(thisStatus);
         var thisTime = new Date();
         if(thisStatus == 'now'){
           thisStatus = "current";
