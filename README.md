@@ -28,8 +28,15 @@ This web App enables users to see a live map of open parking spots in their neig
   //This is either set tp current time if the user is leaving spot now, or to a designated time, if the user if leaving the spot soon
   "leaving":"2016-01-30T18:11:24+00:00",
   
-  //This can be current (user entered this, "leaving" is set to current time), soon (user chose, they are leaving at time "leaving"), expiring (logic decides this, leaving was 10 minutes ago - will disapear after 20mins), or chosen (user took spot, they can see as red and large)
-  "status": "soon"}
+  //This can be current (user entered this, "leaving" is set to current time), soon (user chose, they are leaving at time "leaving"), or chosen (user took spot, they can see as outlined and larger)
+  "status": "soon",
+  
+  //this is the username of the user who marked the spot, set when user adds spot
+  "leaver": "username",
+  
+  /this is the username of the user who has selected the spot, set when user takes spot
+  "taker": "username"
+  }
 ]
 ```
 
