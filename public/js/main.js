@@ -139,6 +139,7 @@ $(document).ready(function(){
           data: {spot: pickedLocation}
         }).done(addMarker(pickedLocation));
       });
+      map.removeListener('click', function(event){});
     });
   })
 });
