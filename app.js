@@ -13,6 +13,7 @@ var authenticateUser = function(username, password, callback) {
       if (passwordsMatch) {
         callback(data);
       } else {
+        ///
         callback(false);
       }
     })
