@@ -7,16 +7,9 @@ var bcrypt = require('bcrypt');
 var MongoStore = require('connect-mongo')(session)
 
 var authenticateUser = function(username, password, callback) {
-  // console.log('got to authenticateUser, username: '+username+', password: '+password);
   db.collection('users').findOne({username: username}, function(err, data) {
     if (err) {throw err;}
-    var hashedPass;
-    bcrypt.hash('paulsimon', 8, function(err, hash){if(err){throw err;}
-      hashedPass = hash;
-    });
-    bcrypt.compare(password, hashedPass, function(err, passwordsMatch) {
-      console.log(err);
-      console.log(passwordsMatch);
+    bcrypt.compare(password, data.password_digest, function(err, passwordsMatch) {
       // if (passwordsMatch) {
         callback(data);
       // } else {
@@ -24,20 +17,6 @@ var authenticateUser = function(username, password, callback) {
       // }
     })
   });
-  // db.collection('users').findOne({username: username}, function(err, data) {
-  //   console.log('found '+data.username+' with password: '+data.password);
-  //   if (err) {throw err;}
-  //   // var encryptedPassword = bcrypt.hashSync(data.password);
-  //   // console.log(encryptedPassword);
-  //   bcrypt.compare(password, bcrypt.hashSync(data.password), function(err, passwordsMatch) {
-  //     console.log(passwordsMatch);
-  //     if (passwordsMatch) {
-  //       callback(data);
-  //     } else {
-  //       callback(false);
-  //     }
-  //   })
-  // });
 };
 
 app.use(express.static(__dirname + '/public'));
@@ -57,13 +36,7 @@ MongoClient.connect(mongoUrl, function(err, database) {
   process.on('exit', db.close);
 });
 
-// app.use(function(req, res, next) {
-//   console.log(req.method, req.url, '\n body:', req.body, '\n session:', req.session);
-//   next();
-// });
-
 app.use(session({
-  // arbitrary
   secret: 'waffles'
 }))
 
@@ -71,16 +44,13 @@ app.use(session({
 app.get('/', function(req, res){
   var key = process.env.GOOGLE_API;
   var name = req.session.name;
-  console.log(name);
   res.render('index', {myKey: key, name: name});
 });
 
 app.post('/login', function(req, res) {
-  // req.session.name = req.body.userInfo.username;
   thisUser = req.body;
   authenticateUser(thisUser.username, thisUser.password, function(user){
     if(user){
-      console.log(user);
       req.session.name = user.username;
       req.session.userId = user._id;
     }
@@ -124,9 +94,7 @@ app.get('/spots', function(req, res){
   // runs through all non-archived spots
   var toArchive = function(error, currentSpots){
     currentSpots.forEach(checkIfCurrent);
-    // TODO add following line of code into the find object to cut out taken spots from other users
-    /* , taker: {$ne: thisUser.username} */
-    db.collection('spots').find({status:{$ne: "archived"}}).toArray(function(error, onlyCurrent){
+    db.collection('spots').find({status:{$ne: "archived"}, $or: [ { taker: null }, { taker: req.session.userId} ]}).toArray(function(error, onlyCurrent){                
       res.json(onlyCurrent);
     }); 
   };
@@ -136,7 +104,7 @@ app.get('/spots', function(req, res){
 app.post('/spots', function(req, res){
   var newSpot = req.body.spot;
   // TODO add following line of code to mark this user as the leaver of this spot
-  // newSpot.leaver = thisUser.username;
+  newSpot.leaver = req.session.userId;
   db.collection('spots').insert(newSpot, function(err, result){
     res.json(result);
   });
@@ -149,7 +117,7 @@ app.post('/taken', function(req, res){
   var spotId = ObjectId(takenSpot._id)
   var updateNewSpot = function(error, oldSpot){
     /* , taker: thisUser.username */
-    db.collection('spots').update({"_id": spotId},{$set: {status : 'taken'}}, function(err, data) {
+    db.collection('spots').update({"_id": spotId},{$set: {status : 'taken', taker: req.session.userId}}, function(err, data) {
       res.json(data);
     });   
   };
@@ -164,14 +132,14 @@ app.post('/taken', function(req, res){
       if (oldSpotDate.getTime() > now.getTime()) {
         newStatus = "soon";
       };
-      db.collection('spots').update({"_id": oldSpotId},{$set: {status : newStatus/* , taker: null */}}, updateNewSpot);
+      db.collection('spots').update({"_id": oldSpotId},{$set: {status : newStatus , taker: null }}, updateNewSpot);
     }else{
       updateNewSpot();
     };
   };
   // TODO the following line of code will find the non-archived spot marked taken with this user's username as taker
   /* , "taker": thisUser.username */
-  db.collection('spots').findOne({"status": "taken"}, updateOldSpot);
+  db.collection('spots').findOne({"status": "taken", "taker": req.session.userId}, updateOldSpot);
 });
 
 app.get('/data', function(req, res){
