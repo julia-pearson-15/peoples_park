@@ -11,11 +11,32 @@
 <body>
   <div id="container">
     <div id="menu" class="modal-container">
-      <button id="add-spot" class="menu-buttons modal-content">Add Spot</button>
-      <p></p>
-      <button id="see-spots" class="menu-buttons modal-content">See Spots</button>
-    </div>
-    <div id="menu" class="form-modal-container">
+      <% if (name) {%>
+        <button id="add-spot" class="menu-buttons modal-content">Add Spot</button>
+        <p></p>
+        <button id="see-spots" class="menu-buttons modal-content">See Spots</button>
+        <p></p>
+        <button id="logout" class="menu-buttons modal-content">Log Out</button>
+      <% } else { %>
+        <form action="/#" method="POST">
+          <input id="username" class="modal-content" type="text" name="username">
+          <p></p>
+          <input id="password" class="modal-content" type="password" name="password">
+          <p></p>
+          <button id="login" class="menu-buttons modal-content" type="submit">Login</button>
+        </form>
+        <p></p>
+        <p></p>
+        <form action="/#" method="POST">
+          <input id="new-username" class="modal-content" type="text" name="username">
+          <p></p>
+          <input id="new-password" class="modal-content" type="password" name="password">
+          <p></p>
+          <button id="signup" class="menu-buttons modal-content" type="submit">Sign Up!</button>
+        </form>
+      <% } %>
+    </div> <!-- modal-container -->
+    <div class="form-modal-container">
       <form action="/#" method="POST">
         <select id="day-input" class="input-modal-content" name="day">
           <option value="Monday">Monday</option>

@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/julia-pearson/final_project#readme",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "body-parser": "^1.14.2",
+    "connect-mongo": "^1.1.0",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
+    "express-session": "^1.13.0",
     "kerberos": "0.0.18",
     "mongodb": "^2.1.4"
   }

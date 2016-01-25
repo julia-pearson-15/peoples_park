@@ -1,61 +1,60 @@
-// What should be in controllers?
-// Is it OK to split into two pages?
-// Should I be using angular or ajax?
-// How to I get my additions to load into the database?
-// Need to take down this marker.
 
 var map;
 var carImage = "/images/car-available.png";
-var userAdding = false;
 
-// var canDrag = false;
+var getImage = function(status){
+  if(status == 'current'){
+    return '/images/car-available.png';
+  }else if(status == 'soon'){
+    return '/images/car-soon.png';
+  }else if(status == 'taken'){
+    return '/images/my-car.png';
+  };
+};
 
-var addMarker = function(location){
-  location.location.lat = parseFloat(location.location.lat);
-  location.location.lng = parseFloat(location.location.lng);
+var addMarker = function(spot){
+  // Turns the stringified location data back into num
+  spot.location.lat = parseFloat(spot.location.lat);
+  spot.location.lng = parseFloat(spot.location.lng);
 
   // logic that sets car marker
-  if(location.status == 'current'){
-    carImage = '/images/car-available.png';
-  }else if(location.status == 'soon'){
-    carImage = '/images/car-soon.png';
-  }else if(location.status == 'taken'){
-    carImage = '/images/my-car.png';
-  };
+  carImage = getImage(spot.status);
 
-  var contentStringStart = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">'+ location.day +'</h1>'+'<div id="bodyContent">'; 
+  var infoStart = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">'+ spot.day +'</h1>'+'<div id="bodyContent">'; 
   var middle;
 
-  var fullDate = new Date(location.leaving);
+  // change stringified date into date object
+  var fullDate = new Date(spot.leaving);
+  var minutes = fullDate.getMinutes();
+  // handling minuts < 10 which would otherwise show up as 7:5 PM
+  if (fullDate.getMinutes()<10) {
+    minutes = 0+minutes;
+  };
   if(fullDate.getHours() > 12){
-    var time = (fullDate.getHours()-12) + ":" + fullDate.getMinutes()+" PM";
+    var time = (fullDate.getHours()-12) + ":" + minutes+" PM";
   }else{
     var time = fullDate.getHours() + ":" + fullDate.getMinutes()+" AM";
   }
   // logic that sets info timing
-  if(location.status == 'soon'){
+  if(spot.status == 'soon'){
     middle = '<p>Leaving Spot at ' + time;
-  }else if(location.status == 'current'){
+  }else if(spot.status == 'current'){
     middle = '<p>Left Spot at ' + time;
-
-  }else if(location.status == 'taken'){
+  }else if(spot.status == 'taken'){
     middle = '<p>Get to Spot by ' + time;
   };
 
   var contentStringEnd = '</p>'+'<a id="take-spot" href="/false">'+'Take Spot</a>'+'</div>'+'</div>';
-  var contentString = contentStringStart+middle+contentStringEnd;
+  var contentString = infoStart+middle+contentStringEnd;
   //make action for taking spot away
   var infowindow = new google.maps.InfoWindow({
     content: contentString
   });
+  // creating marker with all ^ information
   var marker = new google.maps.Marker({
-    // set the positon to the latitude and longitude
-    position: location.location,
-    // the map I defined
+    position: spot.location,
     map: map,
-    id: location._id,
-    // draggable: canDrag,
-    // makes icon my car image
+    id: spot._id,
     icon: carImage
   });
   marker.addListener('click', function(event) {
@@ -67,36 +66,76 @@ var addMarker = function(location){
         url: '/taken',
         type: 'POST',
         dataType: 'json',
-        data: {spot: location}
+        data: {spot: spot}
       }).done(function(response){});
     });
   });
 };
-// puts all locations on the map
+
+// runs through markers and adds them to map
 var addAllMarkers = function(markers){
+  // calls addMarker for each spot
   markers.forEach(addMarker);
 } 
-//make map with markers
+
+// makes empty map - is called directly in index.ejs script tag
 function initMap() {
-  // makes map
   map = new google.maps.Map(document.getElementById('map'), {
+    // TODO replact lat and long with the browser location
     center: {lat: +40.6706031, lng: -73.9901245},
     zoom: 15
   });
 };
 
 $(document).ready(function(){
+  // opens the welcome modal with options to add or see spots
   var $modal = $(".modal-container");
   $modal.toggle();
+
+  $('#logout').on('click',function(event){
+    event.preventDefault();
+    $.ajax({
+      url: '/logout',
+      type: 'GET',
+      dataType: 'json'
+    }).done(function(response){});   
+  });
+  $('#login').on('click',function(event){
+    event.preventDefault();
+    var username = $('#username').val();
+    var password = $('#password').val();
+    var userInfo = {username: username, password: password};
+    $.ajax({
+      url: '/login',
+      type: 'POST',
+      dataType: 'json',
+      data: userInfo
+    }).done(function(response){});   
+  });
+  $('#signup').on('click',function(event){
+    event.preventDefault();
+    var username = $('#new-username').val();
+    var password = $('#new-password').val();
+    var userInfo = {username: username, password: password};
+    $.ajax({
+      url: '/signup',
+      type: 'POST',
+      dataType: 'json',
+      data: userInfo
+    }).done(function(response){});   
+  });
+  // user clicks see spots
   $('#see-spots').on('click',function(event){
+    // close opening modal
     $modal.toggle();
-    // Gets all seeded locations
+    // requests all unarchived spots and then calls addAllMarkers on the result
     $.ajax({
       url: '/spots',
       type: 'GET',
       dataType: 'json'
     }).done(addAllMarkers);
   })
+  // left off!!!
   $('#add-spot').on('click',function(event){
     userAdding = true;
     $modal.toggle();
@@ -129,7 +168,6 @@ $(document).ready(function(){
           thisTime.setMinutes(minuteDelay); 
           thisStatus = "soon";
         }
-        //prevent submit button
         var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: thisDay, status: thisStatus};
         $formModal.toggle();
         $.ajax({
@@ -139,7 +177,6 @@ $(document).ready(function(){
           data: {spot: pickedLocation}
         }).done(addMarker(pickedLocation));
       });
-      map.removeListener('click', function(event){});
     });
   })
 });
