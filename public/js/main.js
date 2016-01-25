@@ -213,7 +213,7 @@ $(document).ready(function(){
           dataType: 'json',
           data: {spot: pickedLocation}
         }).done(function(){
-          addMarker(pickedLocation);
+          makeMap();
           $formModal.toggle();
           $menuModal.toggle();
         });
