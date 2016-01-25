@@ -125,11 +125,11 @@ app.post('/taken', function(req, res){
   // The following code finds the user's old taken spot (if not archived and theirs), marks that one as available, then finds the new spot, and marks that one as taken and theirs
 
   var takenSpot = req.body.spot;
+  var lastSpot;
   var spotId = ObjectId(takenSpot._id)
   var updateNewSpot = function(error, oldSpot){
-    /* , taker: thisUser.username */
     db.collection('spots').update({"_id": spotId},{$set: {status : 'taken', taker: req.session.userId}}, function(err, data) {
-      res.json(data);
+      res.json(oldSpot);
     });   
   };
   var updateOldSpot = function(error, oldSpot){

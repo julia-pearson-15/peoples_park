@@ -76,16 +76,22 @@ var addMarker = function(spot){
         type: 'POST',
         dataType: 'json',
         data: {spot: spot}
-      }).done(function(response){infowindow.close(map, marker);});
+      }).done(function(response){
+        // marker.icon = getImage('taken')
+        infowindow.close(map, marker);
+        makeMap();
+      });
     });
   });
 };
+
 
 // runs through markers and adds them to map
 var addAllMarkers = function(markers){
   // calls addMarker for each spot
   markers.forEach(addMarker);
 } 
+
 
 // makes empty map - is called directly in index.ejs script tag
 function initMap() {
@@ -94,6 +100,15 @@ function initMap() {
     center: {lat: +40.6706031, lng: -73.9901245},
     zoom: 15
   });
+};
+
+var makeMap = function(){
+  initMap();
+  $.ajax({
+    url: '/spots',
+    type: 'GET',
+    dataType: 'json'
+  }).done(addAllMarkers);
 };
 
 $(document).ready(function(){
@@ -158,14 +173,11 @@ $(document).ready(function(){
     // close opening modal
     $menuModal.toggle();
     // requests all unarchived spots and then calls addAllMarkers on the result
-    $.ajax({
-      url: '/spots',
-      type: 'GET',
-      dataType: 'json'
-    }).done(addAllMarkers);
+    makeMap();
   })
   $('#add-spot').on('click',function(event){
     $menuModal.toggle();
+    initMap();
     //to add spot onto the map
     map.addListener('click', function(event) {
       //get latitude and longitude from click
