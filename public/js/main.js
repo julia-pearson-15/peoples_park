@@ -1,3 +1,5 @@
+// make websocket connection outside of ajax to the database
+
 
 var map;
 var carImage = "/images/car-available.png";
@@ -12,14 +14,7 @@ var getImage = function(status){
   };
 };
 
-var addMarker = function(spot){
-  // Turns the stringified location data back into num
-  spot.location.lat = parseFloat(spot.location.lat);
-  spot.location.lng = parseFloat(spot.location.lng);
-
-  // logic that sets car marker
-  carImage = getImage(spot.status);
-
+var getContent = function(spot){
   var infoStart = '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="firstHeading" class="firstHeading">'+ spot.day +'</h1>'+'<div id="bodyContent">'; 
   var middle;
 
@@ -46,6 +41,19 @@ var addMarker = function(spot){
 
   var contentStringEnd = '</p>'+'<a id="take-spot" href="/false">'+'Take Spot</a>'+'</div>'+'</div>';
   var contentString = infoStart+middle+contentStringEnd;
+  return contentString;
+}
+
+var addMarker = function(spot){
+  // Turns the stringified location data back into num
+  spot.location.lat = parseFloat(spot.location.lat);
+  spot.location.lng = parseFloat(spot.location.lng);
+
+  // logic that sets car marker
+  carImage = getImage(spot.status);
+
+  contentString = getContent(spot);
+
   //make action for taking spot away
   var infowindow = new google.maps.InfoWindow({
     content: contentString
@@ -67,7 +75,7 @@ var addMarker = function(spot){
         type: 'POST',
         dataType: 'json',
         data: {spot: spot}
-      }).done(function(response){});
+      }).done(function(response){infowindow.close(map, marker);});
     });
   });
 };
@@ -135,11 +143,8 @@ $(document).ready(function(){
       dataType: 'json'
     }).done(addAllMarkers);
   })
-  // left off!!!
   $('#add-spot').on('click',function(event){
-    userAdding = true;
     $modal.toggle();
-    // canDrag = true;
     //to add spot onto the map
     map.addListener('click', function(event) {
       //get latitude and longitude from click
@@ -175,7 +180,10 @@ $(document).ready(function(){
           type: 'POST',
           dataType: 'json',
           data: {spot: pickedLocation}
-        }).done(addMarker(pickedLocation));
+        }).done(function(){
+          addMarker(pickedLocation);
+          $modal.toggle();
+        });
       });
     });
   })

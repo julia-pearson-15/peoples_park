@@ -10,11 +10,11 @@ var authenticateUser = function(username, password, callback) {
   db.collection('users').findOne({username: username}, function(err, data) {
     if (err) {throw err;}
     bcrypt.compare(password, data.password_digest, function(err, passwordsMatch) {
-      // if (passwordsMatch) {
+      if (passwordsMatch) {
         callback(data);
-      // } else {
-      //   callback(false);
-      // }
+      } else {
+        callback(false);
+      }
     })
   });
 };
@@ -37,7 +37,7 @@ MongoClient.connect(mongoUrl, function(err, database) {
 });
 
 app.use(session({
-  secret: 'waffles'
+  secret: process.env.SESSION_SECRET
 }))
 
 // gets the key
@@ -63,7 +63,7 @@ app.post('/signup', function(req, res) {
   thisUser = req.body;
   bcrypt.hash(thisUser.password, 8, function(err, hash){
     if(err){throw err;}
-    db.collection('spots').insert({password_digest: hash, username: thisUser.username}, function(err, data){
+    db.collection('users').insert({password_digest: hash, username: thisUser.username, points: 5}, function(err, data){
       req.session.name = thisUser.username;
       req.session.userId = thisUser._id;
       res.redirect('/');
@@ -103,8 +103,14 @@ app.get('/spots', function(req, res){
 
 app.post('/spots', function(req, res){
   var newSpot = req.body.spot;
-  // TODO add following line of code to mark this user as the leaver of this spot
   newSpot.leaver = req.session.userId;
+  var updatePoints = function(user){
+    points = user.points+1;
+    db.collection('spots').update({"_id": req.session.userId},{$set: {points : points}}, function(err, data) {});
+  };
+  db.collection('users').find({"_id": req.session.userId}, function(err, data) {
+    updatePoints(data);
+  });
   db.collection('spots').insert(newSpot, function(err, result){
     res.json(result);
   });
