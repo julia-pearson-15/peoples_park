@@ -9,52 +9,52 @@
 </head>
 <body>
   <div id="container">
-    <div id="menu" class="modal-container">
-      <% if (name) {%>
-        <button id="add-spot" class="menu-buttons modal-content">Add Spot</button>
-        <p></p>
-        <button id="see-spots" class="menu-buttons modal-content">See Spots</button>
-        <p></p>
-        <button id="logout" class="menu-buttons modal-content">Log Out</button>
-      <% } else { %>
+    <input type="hidden" id="user" value="<%=name%>">
+    <div id="menu" class="login-modal-container">
         <form action="/#" method="POST">
-          <input id="username" class="modal-content" type="text" name="username">
+          <input id="username" class="form-inputs login-modal-content" type="text" name="username">
           <p></p>
-          <input id="password" class="modal-content" type="password" name="password">
+          <input id="password" class="form-inputs login-modal-content" type="password" name="password">
           <p></p>
-          <button id="login" class="menu-buttons modal-content" type="submit">Login</button>
+          <button id="login" class="menu-buttons login-modal-content" type="submit">Login</button>
         </form>
         <p></p>
-        <p></p>
         <form action="/#" method="POST">
-          <input id="new-username" class="modal-content" type="text" name="username">
+          <input id="new-username" class="form-inputs login-modal-content" type="text" name="username">
           <p></p>
-          <input id="new-password" class="modal-content" type="password" name="password">
+          <input id="new-password" class="form-inputs login-modal-content" type="password" name="password">
           <p></p>
-          <button id="signup" class="menu-buttons modal-content" type="submit">Sign Up!</button>
+          <button id="signup" class="menu-buttons login-modal-content" type="submit">Sign Up!</button>
         </form>
-      <% } %>
+    </div> <!-- login-modal-container -->
+    <div id="menu" class="menu-modal-container">
+      <button id="add-spot" class="menu-buttons menu-modal-content">Add Spot</button>
+      <p></p>
+      <button id="see-spots" class="menu-buttons menu-modal-content">See Spots</button>
+      <p></p>
+      <button id="logout" class="menu-buttons menu-modal-content">Log Out</button>
     </div> <!-- modal-container -->
     <div class="form-modal-container">
       <form action="/#" method="POST">
-        <select id="day-input" class="input-modal-content" name="day">
+        <select id="day-input" class="form-modal-content" name="day">
           <option value="Monday">Monday</option>
           <option value="Tuesday">Tuesday</option>
           <option value="Wednesday">Wednesday</option>
           <option value="Thursday">Thursday</option>
           <option value="Friday">Friday</option>
         </select><br>
-        <select id="status-input" class="input-modal-content" name="status">
+        <select id="status-input" class="form-modal-content" name="status">
           <option value="now">Now</option>
           <option value="5">5 mins</option>
           <option value="10">10 mins</option>
           <option value="15">15 mins</option>
           <option value="20">20 mins</option>
         </select><br>
-        <button type="button" id="error-button" class="input-modal-content">Choose Again</button>
-        <button type="submit" id="new-spot-button" class="input-modal-content">Add Spot</button>
+        <button type="submit" id="new-spot-button" class="form-modal-content">Add Spot</button>
+        <p></p>
+        <button type="button" id="error-button" class="form-modal-content">Choose Again</button>
       </form>
-    </div>
+    </div> <!-- form-modal-container -->
     <div id="map" ></div> <!-- map -->
   </div> <!-- container -->
   <script src="https://maps.googleapis.com/maps/api/js?key=<%=myKey%>&callback=initMap"

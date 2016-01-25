@@ -2,6 +2,7 @@
 
 
 var map;
+var $menuModal;
 var carImage = "/images/car-available.png";
 
 var getImage = function(status){
@@ -97,8 +98,15 @@ function initMap() {
 
 $(document).ready(function(){
   // opens the welcome modal with options to add or see spots
-  var $modal = $(".modal-container");
-  $modal.toggle();
+  var currentUser = $('#user').val();
+  var $loginModal = $(".login-modal-container");
+  $menuModal = $(".menu-modal-container");
+
+  if(currentUser){
+    $menuModal.toggle();
+  }else{
+    $loginModal.toggle();
+  };
 
   $('#logout').on('click',function(event){
     event.preventDefault();
@@ -106,10 +114,15 @@ $(document).ready(function(){
       url: '/logout',
       type: 'GET',
       dataType: 'json'
-    }).done(function(response){});   
+    }).done(function(response){
+      currentUser = null;
+      $menuModal.toggle()
+      $loginModal.toggle();
+    });   
   });
   $('#login').on('click',function(event){
     event.preventDefault();
+    console.log('got to login');
     var username = $('#username').val();
     var password = $('#password').val();
     var userInfo = {username: username, password: password};
@@ -118,7 +131,11 @@ $(document).ready(function(){
       type: 'POST',
       dataType: 'json',
       data: userInfo
-    }).done(function(response){});   
+    }).done(function(response){
+      currentUser = response;
+      $loginModal.toggle();
+      $menuModal.toggle();
+    });   
   });
   $('#signup').on('click',function(event){
     event.preventDefault();
@@ -130,12 +147,16 @@ $(document).ready(function(){
       type: 'POST',
       dataType: 'json',
       data: userInfo
-    }).done(function(response){});   
+    }).done(function(response){
+      currentUser = response;
+      $loginModal.toggle();
+      $menuModal.toggle();
+    });   
   });
   // user clicks see spots
   $('#see-spots').on('click',function(event){
     // close opening modal
-    $modal.toggle();
+    $menuModal.toggle();
     // requests all unarchived spots and then calls addAllMarkers on the result
     $.ajax({
       url: '/spots',
@@ -144,7 +165,7 @@ $(document).ready(function(){
     }).done(addAllMarkers);
   })
   $('#add-spot').on('click',function(event){
-    $modal.toggle();
+    $menuModal.toggle();
     //to add spot onto the map
     map.addListener('click', function(event) {
       //get latitude and longitude from click
@@ -174,7 +195,6 @@ $(document).ready(function(){
           thisStatus = "soon";
         }
         var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: thisDay, status: thisStatus};
-        $formModal.toggle();
         $.ajax({
           url: '/spots',
           type: 'POST',
@@ -182,9 +202,13 @@ $(document).ready(function(){
           data: {spot: pickedLocation}
         }).done(function(){
           addMarker(pickedLocation);
-          $modal.toggle();
+          $formModal.toggle();
+          $menuModal.toggle();
         });
       });
     });
   })
 });
+
+
+

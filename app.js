@@ -42,6 +42,7 @@ app.use(session({
 
 // gets the key
 app.get('/', function(req, res){
+  console.log(req.session.name);
   var key = process.env.GOOGLE_API;
   var name = req.session.name;
   res.render('index', {myKey: key, name: name});
@@ -54,7 +55,8 @@ app.post('/login', function(req, res) {
       req.session.name = user.username;
       req.session.userId = user._id;
     }
-    res.redirect('/');
+    console.log(req.session.name);
+    res.json(req.session.name);
   })
 });
 
@@ -66,7 +68,8 @@ app.post('/signup', function(req, res) {
     db.collection('users').insert({password_digest: hash, username: thisUser.username, points: 5}, function(err, data){
       req.session.name = thisUser.username;
       req.session.userId = thisUser._id;
-      res.redirect('/');
+      console.log(req.session.name);
+      res.json(req.session.name);
     })
   })
 });
@@ -74,10 +77,11 @@ app.post('/signup', function(req, res) {
 app.get('/logout', function(req, res) {
   req.session.name = null;
   req.session.userId = null;
-  res.redirect('/');
+  res.json(req.session.name);
 })
 
 app.get('/spots', function(req, res){
+  console.log(req.session.name);
   // The following code finds all unarchived spots, marks any old spots as archived, then re-queries for non-archived spots making sure to also weed out spots taken by other users
 
   // weeds out any spots 20 mins after leaving time
@@ -102,6 +106,7 @@ app.get('/spots', function(req, res){
 });
 
 app.post('/spots', function(req, res){
+  console.log(req.session.name);
   var newSpot = req.body.spot;
   newSpot.leaver = req.session.userId;
   var updatePoints = function(user){
