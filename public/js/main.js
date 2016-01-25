@@ -117,6 +117,10 @@ $(document).ready(function(){
   var $loginModal = $(".login-modal-container");
   $menuModal = $(".menu-modal-container");
 
+  $('#menu-bubbles').on('click',function(event){
+    $menuModal.toggle();
+  });
+
   if(currentUser){
     $menuModal.toggle();
   }else{

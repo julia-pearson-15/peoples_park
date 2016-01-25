@@ -4,29 +4,36 @@
   <script src="/jquery/dist/jquery.min.js"></script>
   <script src="/js/main.js"></script>
   <link rel="stylesheet" type="text/css" href="/style/style.css">
-  <link rel="stylesheet" href="/style/mobile.css" type="text/css" media="handheld" />
+  <link rel="stylesheet" href="/style/mobile.css" type="text/css" media="handheld">
   <meta name="viewport" content="initial-scale=1.0">
   <meta charset="utf-8">
 </head>
 <body>
   <div id="container">
+    <div id="nav-bar">Park Points : <%=points%>
+      <div id="menu-bubbles">
+        <div class="little-bar"></div>
+        <div class="little-bar"></div>
+        <div class="little-bar"></div>
+      </div>
+    </div>
     <input type="hidden" id="user" value="<%=name%>">
     <div id="menu" class="login-modal-container">
-        <form action="/#" method="POST">
-          <input id="username" class="form-inputs login-modal-content" type="text" name="username">
-          <p></p>
-          <input id="password" class="form-inputs login-modal-content" type="password" name="password">
-          <p></p>
-          <button id="login" class="menu-buttons login-modal-content" type="submit">Login</button>
-        </form>
+      <form action="/#" method="POST">
+        <input id="username" class="form-inputs login-modal-content" type="text" name="username">
         <p></p>
-        <form action="/#" method="POST">
-          <input id="new-username" class="form-inputs login-modal-content" type="text" name="username">
-          <p></p>
-          <input id="new-password" class="form-inputs login-modal-content" type="password" name="password">
-          <p></p>
-          <button id="signup" class="menu-buttons login-modal-content" type="submit">Sign Up!</button>
-        </form>
+        <input id="password" class="form-inputs login-modal-content" type="password" name="password">
+        <p></p>
+        <button id="login" class="menu-buttons login-modal-content" type="submit">Login</button>
+      </form>
+      <p></p>
+      <form action="/#" method="POST">
+        <input id="new-username" class="form-inputs login-modal-content" type="text" name="username">
+        <p></p>
+        <input id="new-password" class="form-inputs login-modal-content" type="password" name="password">
+        <p></p>
+        <button id="signup" class="menu-buttons login-modal-content" type="submit">Sign Up!</button>
+      </form>
     </div> <!-- login-modal-container -->
     <div id="menu" class="menu-modal-container">
       <button id="add-spot" class="menu-buttons menu-modal-content">Add Spot</button>
@@ -56,7 +63,9 @@
         <button type="button" id="error-button" class="form-modal-content">Choose Again</button>
       </form>
     </div> <!-- form-modal-container -->
-    <div id="map" ></div> <!-- map -->
+    <div id="map-container">
+      <div id="map" ></div> <!-- map -->
+    </div> <!-- map-container -->
   </div> <!-- container -->
   <script src="https://maps.googleapis.com/maps/api/js?key=<%=myKey%>&callback=initMap"
   async defer></script>

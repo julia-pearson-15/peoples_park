@@ -45,7 +45,8 @@ app.get('/', function(req, res){
   console.log(req.session.name);
   var key = process.env.GOOGLE_API;
   var name = req.session.name;
-  res.render('index', {myKey: key, name: name});
+  var points = 11;
+  res.render('index', {myKey: key, name: name, points: points});
 });
 
 app.post('/login', function(req, res) {
