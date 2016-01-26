@@ -122,6 +122,7 @@ $(document).ready(function(){
   });
   var $refresh = $('#map-refresh');
   $refresh.on('click',makeMap);
+  // fixing
 
   if(currentUser){
     $menuModal.toggle();
