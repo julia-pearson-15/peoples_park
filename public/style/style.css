@@ -123,6 +123,12 @@
   position: absolute;
   top: 10%;
 }
+#map-refresh{
+  position: absolute;
+  right: 10px;
+  z-index: 1;
+  top: 10px;
+}
 
 #menu{
   width: 100%;

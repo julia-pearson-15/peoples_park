@@ -120,6 +120,8 @@ $(document).ready(function(){
   $('#menu-bubbles').on('click',function(event){
     $menuModal.toggle();
   });
+  var $refresh = $('#map-refresh');
+  $refresh.on('click',makeMap);
 
   if(currentUser){
     $menuModal.toggle();
@@ -184,11 +186,6 @@ $(document).ready(function(){
     initMap();
     //to add spot onto the map
     map.addListener('click', function(event) {
-      //get latitude and longitude from click
-      var latitude = event.latLng.lat();
-      var longitude = event.latLng.lng();  
-
-      var thisTime = new Date();
 
       //grab the form modal and show it
       var $formModal = $('.form-modal-container');
@@ -197,6 +194,10 @@ $(document).ready(function(){
         event.preventDefault();
         $formModal.toggle();
       });
+      //get latitude and longitude from click
+      var latitude = event.latLng.lat();
+      var longitude = event.latLng.lng();
+
       $('#new-spot-button').on('click',function(event){
         event.preventDefault();
         var thisDay = $('#day-input').val();
@@ -217,7 +218,7 @@ $(document).ready(function(){
           dataType: 'json',
           data: {spot: pickedLocation}
         }).done(function(){
-          makeMap();
+          // makeMap();
           $formModal.toggle();
           $menuModal.toggle();
         });
