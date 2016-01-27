@@ -46,8 +46,7 @@ app.get('/', function(req, res){
   console.log(req.session.name);
   var key = process.env.GOOGLE_API;
   var name = req.session.name;
-  var points = 11;
-  res.render('index', {myKey: key, name: name, points: points});
+  res.render('index', {myKey: key, name: name});
 });
 
 app.post('/login', function(req, res) {
@@ -57,8 +56,7 @@ app.post('/login', function(req, res) {
       req.session.name = user.username;
       req.session.userId = user._id;
     }
-    console.log(req.session.name);
-    res.json(req.session.name);
+    res.json(user);
   })
 });
 
@@ -70,8 +68,7 @@ app.post('/signup', function(req, res) {
     db.collection('users').insert({password_digest: hash, username: thisUser.username, points: 5}, function(err, data){
       req.session.name = thisUser.username;
       req.session.userId = thisUser._id;
-      console.log(req.session.name);
-      res.json(req.session.name);
+      res.json(thisUser);
     })
   })
 });
@@ -113,13 +110,14 @@ app.post('/spots', function(req, res){
   newSpot.leaver = req.session.userId;
   var updatePoints = function(user){
     points = user.points+1;
-    db.collection('spots').update({"_id": req.session.userId},{$set: {points : points}}, function(err, data) {});
+    db.collection('users').update({"_id": req.session.userId},{$set: {points : points}}, function(err, data) {
+      db.collection('spots').insert(newSpot, function(err, result){
+        res.json(result);
+      });
+    });
   };
   db.collection('users').find({"_id": req.session.userId}, function(err, data) {
     updatePoints(data);
-  });
-  db.collection('spots').insert(newSpot, function(err, result){
-    res.json(result);
   });
 });
 

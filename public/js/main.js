@@ -4,6 +4,8 @@
 var map;
 var $menuModal;
 var carImage = "/images/car-available.png";
+var latitude;
+var longitude;
 
 var getImage = function(status){
   if(status == 'current'){
@@ -116,13 +118,7 @@ $(document).ready(function(){
   var currentUser = $('#user').val();
   var $loginModal = $(".login-modal-container");
   $menuModal = $(".menu-modal-container");
-
-  $('#menu-bubbles').on('click',function(event){
-    $menuModal.toggle();
-  });
-  var $refresh = $('#map-refresh');
-  $refresh.on('click',makeMap);
-  // fixing
+  var parkPointsText = $('#park-points');
 
   if(currentUser){
     $menuModal.toggle();
@@ -138,6 +134,7 @@ $(document).ready(function(){
       dataType: 'json'
     }).done(function(response){
       currentUser = null;
+      parkPointsText.text('');
       $menuModal.toggle()
       $loginModal.toggle();
     });   
@@ -155,6 +152,8 @@ $(document).ready(function(){
       data: userInfo
     }).done(function(response){
       currentUser = response;
+      parkPoints = currentUser.points;
+      parkPointsText.text('Park Points : '+parkPoints);
       $loginModal.toggle();
       $menuModal.toggle();
     });   
@@ -171,61 +170,67 @@ $(document).ready(function(){
       data: userInfo
     }).done(function(response){
       currentUser = response;
+      parkPoints = currentUser.points;
+      parkPointsText.text('Park Points : '+parkPoints);
       $loginModal.toggle();
       $menuModal.toggle();
     });   
   });
-  // user clicks see spots
   $('#see-spots').on('click',function(event){
     // close opening modal
     $menuModal.toggle();
     // requests all unarchived spots and then calls addAllMarkers on the result
     makeMap();
-  })
+  });
+  var $formModal = $('.form-modal-container');
   $('#add-spot').on('click',function(event){
     $menuModal.toggle();
     initMap();
     //to add spot onto the map
     map.addListener('click', function(event) {
-
       //grab the form modal and show it
-      var $formModal = $('.form-modal-container');
       $formModal.toggle();
-      $('#error-button').on('click',function(event){
-        event.preventDefault();
-        $formModal.toggle();
-      });
       //get latitude and longitude from click
-      var latitude = event.latLng.lat();
-      var longitude = event.latLng.lng();
-
-      $('#new-spot-button').on('click',function(event){
-        event.preventDefault();
-        var thisDay = $('#day-input').val();
-        // will either be now or 5-20 minutes
-        var thisStatus = $('#status-input').val(); 
-        var thisTime = new Date();
-        if(thisStatus == 'now'){
-          thisStatus = "current";
-        } else {
-          var minuteDelay = thisTime.getMinutes()+parseInt(thisStatus);
-          thisTime.setMinutes(minuteDelay); 
-          thisStatus = "soon";
-        }
-        var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: thisDay, status: thisStatus};
-        $.ajax({
-          url: '/spots',
-          type: 'POST',
-          dataType: 'json',
-          data: {spot: pickedLocation}
-        }).done(function(){
-          // makeMap();
-          $formModal.toggle();
-          $menuModal.toggle();
-        });
-      });
+      latitude = event.latLng.lat();
+      longitude = event.latLng.lng();
     });
-  })
+  });
+  $('#error-button').on('click',function(event){
+    event.preventDefault();
+    $formModal.toggle();
+  });
+  $('#new-spot-button').on('click',function(event){
+    console.log("new spot button clicked on");
+    event.preventDefault();
+    var thisDay = $('#day-input').val();
+    // will either be now or 5-20 minutes
+    var thisStatus = $('#status-input').val(); 
+    var thisTime = new Date();
+    if(thisStatus == 'now'){
+      thisStatus = "current";
+    } else {
+      var minuteDelay = thisTime.getMinutes()+parseInt(thisStatus);
+      thisTime.setMinutes(minuteDelay); 
+      thisStatus = "soon";
+    }
+    var pickedLocation = {location: {lat: latitude, lng: longitude}, leaving: thisTime, day: thisDay, status: thisStatus};
+    $.ajax({
+      url: '/spots',
+      type: 'POST',
+      dataType: 'json',
+      data: {spot: pickedLocation}
+    }).done(function(){
+      parkPoints = parkPoints+1;
+      parkPointsText.text('Park Points : '+parkPoints);
+      $formModal.toggle();
+      $menuModal.toggle();
+    });
+  });
+  var $refresh = $('#map-refresh');
+  $refresh.on('click',makeMap);
+  $('#menu-bubbles').on('click',function(event){
+    $menuModal.toggle();
+  });
 });
 
 
