@@ -72,6 +72,7 @@ var addMarker = function(spot){
   });
   marker.addListener('click', function(event) {
     infowindow.open(map, marker);
+    console.log('Click \'take spot\' to reserve that spot and take it off other users\' maps');
     $('#take-spot').on('click', function(event){
       //stop link in info box from workign
       event.preventDefault();
@@ -84,6 +85,7 @@ var addMarker = function(spot){
         // marker.icon = getImage('taken')
         infowindow.close(map, marker);
         makeMap();
+        // console.log('You can only take one spot at a time, click another to change reservation')
       });
     });
   });
@@ -151,7 +153,6 @@ $(document).ready(function(){
   });
   $('#login').on('click',function(event){
     event.preventDefault();
-    console.log('got to login');
     var username = $('#username').val();
     var password = $('#password').val();
     var userInfo = {username: username, password: password};
@@ -191,6 +192,7 @@ $(document).ready(function(){
     $menuModal.toggle();
     // requests all unarchived spots and then calls addAllMarkers on the result
     makeMap();
+    console.log('Click a car to see the spot details\nGreen = available now\nBlue = available soon')
   });
   $('#spot-data').on('click',function(event){
     $menuModal.toggle();
@@ -214,7 +216,6 @@ $(document).ready(function(){
     $formModal.toggle();
   });
   $('#new-spot-button').on('click',function(event){
-    console.log("new spot button clicked on");
     event.preventDefault();
     var thisDay = $('#day-input').val();
     // will either be now or 5-20 minutes
