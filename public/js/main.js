@@ -85,7 +85,7 @@ var addMarker = function(spot){
         // marker.icon = getImage('taken')
         infowindow.close(map, marker);
         makeMap();
-        // console.log('You can only take one spot at a time, click another to change reservation')
+        console.log('You can only take one spot at a time, click another to change reservation')
       });
     });
   });
@@ -127,6 +127,8 @@ var makeMapAll = function(){
 
 $(document).ready(function(){
   // opens the welcome modal with options to add or see spots
+  console.log('click \'Add Spot\' to mark an open spot\nclick \'See Spots\' to take an open spot');
+
   var currentUser = $('#user').val();
   var $loginModal = $(".login-modal-container");
   $menuModal = $(".menu-modal-container");
@@ -201,6 +203,7 @@ $(document).ready(function(){
   var $formModal = $('.form-modal-container');
   $('#add-spot').on('click',function(event){
     $menuModal.toggle();
+    console.log("you clicked \'ADD SPOT\': click on the location to add your open spot!")
     initMap();
     //to add spot onto the map
     map.addListener('click', function(event) {
@@ -218,6 +221,7 @@ $(document).ready(function(){
   $('#new-spot-button').on('click',function(event){
     event.preventDefault();
     var thisDay = $('#day-input').val();
+    console.log('Mark the cleaning day and when the spot will be available\nother users can now see/take your spot!')
     // will either be now or 5-20 minutes
     var thisStatus = $('#status-input').val(); 
     var thisTime = new Date();
