@@ -14,7 +14,9 @@ var getImage = function(status){
     return '/images/car-soon.png';
   }else if(status == 'taken'){
     return '/images/my-car.png';
-  };
+  }else if(status == 'archived'){
+    return '/images/car-expired.png';
+  }
 };
 
 var getContent = function(spot){
@@ -100,7 +102,7 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     // TODO replact lat and long with the browser location
     center: {lat: +40.6706031, lng: -73.9901245},
-    zoom: 15
+    zoom: 16
   });
 };
 
@@ -108,6 +110,14 @@ var makeMap = function(){
   initMap();
   $.ajax({
     url: '/spots',
+    type: 'GET',
+    dataType: 'json'
+  }).done(addAllMarkers);
+};
+var makeMapAll = function(){
+  initMap();
+  $.ajax({
+    url: '/spots/all',
     type: 'GET',
     dataType: 'json'
   }).done(addAllMarkers);
@@ -181,6 +191,10 @@ $(document).ready(function(){
     $menuModal.toggle();
     // requests all unarchived spots and then calls addAllMarkers on the result
     makeMap();
+  });
+  $('#spot-data').on('click',function(event){
+    $menuModal.toggle();
+    makeMapAll();
   });
   var $formModal = $('.form-modal-container');
   $('#add-spot').on('click',function(event){

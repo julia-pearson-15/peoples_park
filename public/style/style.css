@@ -46,7 +46,7 @@
 #menu-bubbles{
   float: left;
 }
-#separator{
+.separator{
   height: 150px;
   text-align: center;
   position: relative;

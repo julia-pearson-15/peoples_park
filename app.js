@@ -104,6 +104,12 @@ app.get('/spots', function(req, res){
   db.collection('spots').find({status:{$ne: "archived"}}).toArray(toArchive);
 });
 
+app.get('/spots/all', function(req, res){
+  db.collection('spots').find({status: "archived"}).toArray(function(error, allSpots){                
+    res.json(allSpots);
+  }); 
+});
+
 app.post('/spots', function(req, res){
   console.log(req.session.name);
   var newSpot = req.body.spot;
