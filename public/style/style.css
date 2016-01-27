@@ -46,6 +46,15 @@
 #menu-bubbles{
   float: left;
 }
+#separator{
+  height: 150px;
+  text-align: center;
+  position: relative;
+  top: 130px;
+  font-size: 50px;
+  color: rgb(234, 93, 13);
+  font-weight: bold;
+}
 #park-points{
   color: white;
   font-weight: bold;
