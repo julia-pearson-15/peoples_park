@@ -7,6 +7,21 @@ Peoples' Park is a mobile-friendly, single-page, JavaScript web application that
 
 ![Imgur](http://i.imgur.com/yWBpT7f.png)
 
+[Deployed App](https://peoples-park.herokuapp.com/)
+
+###Technology
+
+1. JavaScript 
+2. Node.js 
+3. Mongodb 
+4. AJAX
+5. Express 
+6. HTML 
+7. Original CSS  
+8. Google API 
+9. Custom Design 
+10. Mobile Friendly
+
 #ERD
 ```
 [{ 
