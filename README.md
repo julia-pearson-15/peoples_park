@@ -1,6 +1,6 @@
 # People's Park
 
-This web App enables users to see a live map of open parking spots in their neighborhood of New York. While this is best suited to a mobile App, I can't build a mobile App, so here we are. To solve this problem, I hope to implement the Twillio API so that users can text the App either "spot", "taken", or "spotted" to inquire about available spots, notify that a spot is taken, and add a vacant spot to the map. The map will come from the Google API and spots will show up as markers with specified latitudes and longitudes. 
+Peoples' Park is a mobile-friendly, single-page, JavaScript web application that allows users to find street parking in NYC. I worked closely with the Google Maps API but utilized my own user-driven database, which continually updates with AJAX calls. All spots are archived 20 minutes after they opened up (because in NYC no spot is around that long), so users can go to 'spot trends' and get a better sense of when spots open up in their neighborhood. Because of the archiving, the map will probably be empty when you load it. Add some spots to get a sense for the functionality!
 
 ##User Stories
 
@@ -41,11 +41,6 @@ This web App enables users to see a live map of open parking spots in their neig
 ```
 
 #Wireframes - red marks post-MVP
-![Imgur](http://i.imgur.com/cM5ewig.jpg)
-![Imgur](http://i.imgur.com/POOnZ6p.jpg)
-![Imgur](http://i.imgur.com/vbF92qp.jpg)
-![Imgur](http://i.imgur.com/ra6S8Ow.jpg)
-![Imgur](http://i.imgur.com/uk11VV9.jpg)
-![Imgur](http://i.imgur.com/RvRXyMM.jpg)
+!([Imgur](http://i.imgur.com/yWBpT7f.png))
 
 
