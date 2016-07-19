@@ -2,6 +2,9 @@
 
 Peoples' Park is a mobile-friendly, single-page, JavaScript web application that allows users to find street parking in NYC. I worked closely with the Google Maps API but utilized my own user-driven database, which continually updates with AJAX calls. All spots are archived 20 minutes after they opened up (because in NYC no spot is around that long), so users can go to 'spot trends' and get a better sense of when spots open up in their neighborhood. Because of the archiving, the map will probably be empty when you load it. Add some spots to get a sense for the functionality!
 
+-username: jane
+-password: frank
+
 ![Imgur](http://i.imgur.com/yWBpT7f.png)
 
 #ERD
